@@ -492,7 +492,7 @@ Implement a function that returns the last digit of a given number.
 -}
 -- DON'T FORGET TO SPECIFY THE TYPE IN HERE
 lastDigit :: Integral a => a -> a
-lastDigit n = n `mod` 10
+lastDigit n = abs n `mod` 10
 
 
 {- |
@@ -557,7 +557,7 @@ Casual reminder about adding top-level type signatures for all functions :)
 -}
 
 mid :: Int -> Int -> Int -> Int
-mid x y z 
+mid x y z
     | x <= y && y <= z || z <= y && y <= x = y
     | y <= x && x <= z || z <= x && x <= y = x
     | x <= z && z <= y || y <= z && z <= x = z
@@ -576,7 +576,7 @@ True
 False
 -}
 isVowel :: Char -> Bool
-isVowel c = c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u' 
+isVowel c = c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u'
 
 
 {- |
@@ -641,9 +641,9 @@ specifying complex expressions.
 -}
 
 sumLast2 :: Integral a => a -> a
-sumLast2 n = 
-  let lastDigit = n `mod` 10
-      secondLastDigit = (n `div` 10) `mod` 10
+sumLast2 n =
+  let lastDigit = abs n `mod` 10
+      secondLastDigit = (abs n `div` 10) `mod` 10
   in lastDigit + secondLastDigit
 
 
@@ -666,7 +666,7 @@ aren't ready for this boss yet!
 -}
 
 firstDigit :: Integral a => a -> a
-firstDigit n 
+firstDigit n
   | n `mod` 10 == n = n
   | otherwise = firstDigit (n `div` 10)
 
