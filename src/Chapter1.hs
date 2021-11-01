@@ -491,8 +491,8 @@ Implement a function that returns the last digit of a given number.
   whether it works for you!
 -}
 -- DON'T FORGET TO SPECIFY THE TYPE IN HERE
-lastDigit :: Integral a => a -> a
-lastDigit n = abs n `mod` 10
+lastDigit :: Int -> Int
+lastDigit n = mod (abs n) 10
 
 
 {- |
@@ -642,8 +642,8 @@ specifying complex expressions.
 
 sumLast2 :: Integral a => a -> a
 sumLast2 n =
-  let lastDigit = abs n `mod` 10
-      secondLastDigit = (abs n `div` 10) `mod` 10
+  let (rest, lastDigit) = divMod (abs n) 10
+      secondLastDigit = mod rest 10
   in lastDigit + secondLastDigit
 
 
@@ -666,9 +666,9 @@ aren't ready for this boss yet!
 -}
 
 firstDigit :: Integral a => a -> a
-firstDigit n
-  | n `mod` 10 == n = n
-  | otherwise = firstDigit (n `div` 10)
+firstDigit n = 
+  let (rest, last) = divMod (abs n) 10
+  in if abs n == last then last else firstDigit rest
 
 
 {-
