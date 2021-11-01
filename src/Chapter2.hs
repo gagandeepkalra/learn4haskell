@@ -141,7 +141,7 @@ List of booleans:
 
 String is a list of characters:
 >>> :t "some string"
-"some string" :: String
+"some string" :: [Char]
 
 
 Empty list:
@@ -643,7 +643,7 @@ Write a function that takes elements of a list only in even positions.
 🕯 HINT: You need to write a recursive function that pattern matches
   on the list structure. Your function will have several cases and
   probably needs to use nested pattern matching on lists of size at
-  least 2. Alternatively, you can use the "Recursive infiniteRepetition" pattern.
+  least 2. Alternatively, you can use the "Recursive go" pattern.
 
 >>> takeEven [2, 1, 3, 5, 4]
 [2,3,4]
