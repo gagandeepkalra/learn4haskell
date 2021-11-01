@@ -877,7 +877,7 @@ list.
 🕯 HINT: Use the 'cycle' function
 -}
 rotate :: Int -> [a] -> [a]
-rotate n ls = 
+rotate n ls = if n < 0 then [] else
   let  
     infiniteRepetition [] = infiniteRepetition ls
     infiniteRepetition (x : xs) = x : infiniteRepetition xs
