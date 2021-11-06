@@ -758,8 +758,7 @@ value of the element itself
 🕯 HINT: Use combination of 'map' and 'replicate'
 -}
 smartReplicate :: [Int] -> [Int]
-smartReplicate [] = []
-smartReplicate (x:xs) = replicate x x ++ (smartReplicate xs)
+smartReplicate = concatMap (\x -> replicate x x)
 
 {- |
 =⚔️= Task 9
@@ -879,11 +878,9 @@ list.
 rotate :: Int -> [a] -> [a]
 rotate n ls = if n < 0 then [] else
   let  
-    infiniteRepetition [] = infiniteRepetition ls
-    infiniteRepetition (x : xs) = x : infiniteRepetition xs
-
     l = length  ls
-  in take l (drop n (infiniteRepetition ls))
+    n' = n `mod` l
+  in take l (drop n' (ls ++ ls))
 
 
 
