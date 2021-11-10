@@ -491,7 +491,6 @@ instance Applicative (Secret e) where
 
     (<*>) :: Secret e (a -> b) -> Secret e a -> Secret e b
     (<*>) (Trap e) _ = Trap e
-    (<*>) _ (Trap e) = Trap e
     (<*>) (Reward f) r = fmap f r
 
 {- |
@@ -506,14 +505,15 @@ Implement the 'Applicative' instance for our 'List' type.
   type.
 -}
 
+(+++) :: List a -> List a -> List a
+(+++) (Cons a t) as = Cons a (t +++ as)
+(+++) Empty as = as
+
 instance Applicative List where
   pure a = Cons a Empty
   (<*>):: List (a -> b) -> List a -> List b
   (<*>) fList aList =
     let
-      (+++) (Cons a t) as = Cons a (t +++ as)
-      (+++) Empty as = as
-
       go acc Empty = acc
       go acc (Cons f fs) = go (acc +++ fmap f aList) fs
     in  go Empty fList
@@ -645,9 +645,6 @@ instance Monad List where
     (>>=) :: List a -> (a -> List b) -> List b
     (>>=) aList f =
       let
-        (+++) (Cons a t) as = Cons a (t +++ as)
-        (+++) Empty as = as
-
         go acc Empty = acc
         go acc (Cons x xs) = go (acc +++ x) xs
       in  go Empty (fmap f aList)
@@ -726,7 +723,7 @@ instance Functor Tree where
 
 reverseTree:: Tree a -> Tree a
 reverseTree Nil = Nil
-reverseTree (Node a l r) = Node a r l
+reverseTree (Node a l r) = Node a (reverseTree r) (reverseTree l)
 
 toList:: Tree a -> [a]
 toList (Node a l r) = toList l ++ [a] ++ toList r
