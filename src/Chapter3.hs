@@ -509,13 +509,18 @@ data Education = Church | Library
 
 data House = House { housePeople:: Int }
 
+mkHouse :: Int -> Maybe House
+mkHouse n
+  | 1 <= n && n <= 4 = Just $ House n
+  | otherwise = Nothing 
+
 buildCastle:: String -> City -> City
 buildCastle newName oldCity = case castle oldCity of
   Nothing ->  oldCity { castle = Just $ Castle newName False }
   Just (Castle _ oldWall) -> oldCity { castle = Just $ Castle newName oldWall }
 
-buildHouse:: Int -> City -> City
-buildHouse people oldCity = oldCity { cityHouses = House people : cityHouses oldCity }
+buildHouse:: House -> City -> City
+buildHouse house oldCity = oldCity { cityHouses = house : cityHouses oldCity }
 
 buildWalls:: City -> City
 buildWalls oldCity@(City (Just oldCastle@(Castle _ False)) _ houses) = 
@@ -984,12 +989,8 @@ instance Append [a] where
   append = (++)
 
 instance (Append a) => Append (Maybe a) where
-  append (Just x) Nothing = Just x
-  append Nothing (Just x)  = Just x
-  append (Just x) (Just y) = Just $ append x y
-  append Nothing Nothing = Nothing
-
-
+  append (Just x) a = fmap (append x) a
+  append Nothing a = a
 
 {-
 =🛡= Standard Typeclasses and Deriving
@@ -1052,19 +1053,13 @@ implement the following functions:
 -}
 
 data Weekday = Sunday | Monday | Tuesday | Wednesday | Thursday | Friday | Saturday
-  deriving (Show, Read, Eq, Ord)
+  deriving (Show, Read, Eq, Ord, Enum)
 
 isWeekend:: Weekday -> Bool 
 isWeekend day = day == Sunday || day == Saturday
 
 nextDay:: Weekday -> Weekday
-nextDay Sunday = Monday
-nextDay Monday = Tuesday
-nextDay Tuesday = Wednesday
-nextDay Wednesday = Thursday
-nextDay Thursday = Friday
-nextDay Friday = Saturday
-nextDay Saturday = Sunday
+nextDay = succ
 
 daysToParty:: Weekday -> Int
 daysToParty = 
