@@ -507,12 +507,13 @@ data Castle = Castle { castleName:: String, hasWall:: Bool }
 
 data Education = Church | Library
 
-data House = House { housePeople:: Int }
+data People = One | Two | Three | Four
+  deriving Enum
 
-mkHouse :: Int -> Maybe House
-mkHouse n
-  | 1 <= n && n <= 4 = Just $ House n
-  | otherwise = Nothing 
+data House = House { housePeople:: People }
+
+peopleInt :: People -> Int
+peopleInt = (+ 1) . fromEnum
 
 buildCastle:: String -> City -> City
 buildCastle newName oldCity = case castle oldCity of
@@ -526,7 +527,7 @@ buildWalls:: City -> City
 buildWalls oldCity@(City (Just oldCastle@(Castle _ False)) _ houses) = 
   let 
     countPeople:: Int -> [House] -> Int
-    countPeople acc ((House people) : xs) =  countPeople (acc + people) xs
+    countPeople acc ((House people) : xs) =  countPeople (acc + peopleInt people) xs
     countPeople acc [] = acc
   in 
     if countPeople 0 houses >= 10 then oldCity { castle = Just (oldCastle { hasWall = True }) }
@@ -985,12 +986,14 @@ newtype Gold = Gold Int
 
 instance Append Gold where
   append (Gold g1) (Gold g2) = Gold (g1 + g2)
+
 instance Append [a] where
   append = (++)
 
 instance (Append a) => Append (Maybe a) where
-  append (Just x) a = fmap (append x) a
+  append (Just x) (Just y) = Just $ append x y
   append Nothing a = a
+  append a Nothing = a
 
 {-
 =🛡= Standard Typeclasses and Deriving
@@ -1059,7 +1062,8 @@ isWeekend:: Weekday -> Bool
 isWeekend day = day == Sunday || day == Saturday
 
 nextDay:: Weekday -> Weekday
-nextDay = succ
+nextDay Saturday = Sunday
+nextDay x = succ x
 
 daysToParty:: Weekday -> Int
 daysToParty = 
